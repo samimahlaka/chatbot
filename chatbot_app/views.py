@@ -15,7 +15,6 @@ def chatbot_response(request):
 @permission_classes([IsAuthenticated])
 def chatbot_input(request):
     user_input = request.data.get('input')
-
     response = requests.post (
         "http://localhost:11434/api/generate",
         json={
@@ -26,14 +25,14 @@ def chatbot_input(request):
     )
     result = response.json()
     reply = result['response']
-    Conversation.objects.create(user_input =  user_input , response = reply )
+    Conversation.objects.create(user= request.user ,  user_input =  user_input , response = reply )
     return Response({'response': reply})
 
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def chatbot_list(request):
-    conversations = Conversation.objects.all()
+    conversations = Conversation.objects.filter(user=request.user)
     data = []
     for conversation in conversations:
         data.append({'user-input' : conversation.user_input,

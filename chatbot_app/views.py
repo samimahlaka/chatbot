@@ -5,6 +5,8 @@ from rest_framework.response import Response
 import requests
 from .models import Conversation
 from rest_framework.decorators import permission_classes
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 import redis
 
 r = redis.Redis(host='localhost' , port=6379 , db=0 )
@@ -51,3 +53,16 @@ def redis_test(request):
     result = value.decode('utf-8')
     
     return Response({"redis-value" : result})    
+
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        access_token = data.get('access')
+        username = self.user.username
+        r.set(f'token : {username}' , access_token, ex=3600)
+        return data
+    
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
+    

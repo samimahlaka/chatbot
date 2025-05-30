@@ -5,6 +5,9 @@ from rest_framework.response import Response
 import requests
 from .models import Conversation
 from rest_framework.decorators import permission_classes
+import redis
+
+r = redis.Redis(host='localhost' , port=6379 , db=0 )
 
 @api_view(['GET'])
 def chatbot_response(request):
@@ -39,4 +42,12 @@ def chatbot_list(request):
                     'chatbot_response' : conversation.response})
         
     return Response(data)
+
+@api_view(['GET'])
+def redis_test(request):
+    r.set("test", "hello i'm ready")
     
+    value = r.get('test')
+    result = value.decode('utf-8')
+    
+    return Response({"redis-value" : result})    

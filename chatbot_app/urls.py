@@ -9,4 +9,5 @@ urlpatterns = [
     path('chatbot_list/' , views.chatbot_list),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/refresh/',TokenRefreshView.as_view(), name = 'token_refresh'),
+    path('redis_test/',views.redis_test),
 ]

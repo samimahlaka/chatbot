@@ -76,16 +76,22 @@ WSGI_APPLICATION = 'chatbot_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+import os
+IS_DOCKER = os.environ.get("IS_DOCKER", "False") == "True"
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'chatbot_db',
-        'USER': 'postgres',
-        'PASSWORD': '328600',  # use your actual password
-        'HOST': 'localhost',
+        'NAME': os.environ.get('POSTGRES_DB', 'chatbot'),
+        'USER': os.environ.get('POSTGRES_USER', 'postgres'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', '328600'),
+        'HOST': 'db' if IS_DOCKER else 'localhost',
         'PORT': '5432',
     }
 }
+
+
+
 
 
 # Password validation

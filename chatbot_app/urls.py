@@ -2,7 +2,8 @@
 from django.urls import path
 from chatbot_app import views
 from .views import CustomTokenObtainPairView
-from rest_framework_simplejwt.views import  (TokenRefreshView)
+from rest_framework_simplejwt.views import  (TokenRefreshView , TokenBlacklistView)
+
 
 urlpatterns = [
     path('chatbot_response/', views.chatbot_response, name='chatbot_response'),
@@ -11,4 +12,5 @@ urlpatterns = [
     path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/refresh/',TokenRefreshView.as_view(), name = 'token_refresh'),
     path('redis_test/',views.redis_test),
+    path('logout/', TokenBlacklistView.as_view()),
 ]
